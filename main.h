@@ -16,7 +16,7 @@ if((tret = gpioSetMode(port, PI_OUTPUT)) != 0) \
 
 #define _GPIO_TERMINATE() \
 programend: \
-	gpioTerminate() \
-	return 0; \
+	gpioTerminate(); \
+	return 0;
 
 #endif

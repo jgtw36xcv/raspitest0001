@@ -8,4 +8,4 @@ main.o: main.c
 	$(CC) -c main.c
 
 clean:
-    $(RM) main main.o
+	$(RM) main main.o

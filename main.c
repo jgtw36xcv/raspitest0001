@@ -18,7 +18,7 @@ int gpiostate[7][8]=
 
 int main(int argc,char *argv[])
 {	char str[256];
-	int nstate=0, i, tret;
+	int nstate=0, i;
 	int inum,istate[8];
 
 	_GPIO_INIT();
