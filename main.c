@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "main.h"
+
 // BCM 4,5,6,7,8,9,10,11
 // motr 
 int gpiostate[7][8]=
@@ -19,80 +21,24 @@ int main(int argc,char *argv[])
 	int nstate=0, i, tret;
 	int inum,istate[8];
 
-	if(gpioInitialise() == PI_INIT_FAILED)
-	{	puts("pi init failed.");
-		goto programend;
-	}
+	_GPIO_INIT();
 
-	if((tret = gpioSetMode(4, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
+	_GPIO_SET_OUTPUT(4);
+	_GPIO_SET_OUTPUT(5);
+	_GPIO_SET_OUTPUT(6);
+	_GPIO_SET_OUTPUT(7);
+	_GPIO_SET_OUTPUT(8);
+	_GPIO_SET_OUTPUT(9);
+	_GPIO_SET_OUTPUT(10);
+	_GPIO_SET_OUTPUT(11);
 
-	if((tret = gpioSetMode(5, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
+	_GPIO_SET_OUTPUT(17);
+	_GPIO_SET_OUTPUT(18);
 
-	if((tret = gpioSetMode(6, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(7, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(8, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(9, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(10, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(11, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(17, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(18, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(23, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(24, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(25, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
-
-	if((tret = gpioSetMode(26, PI_OUTPUT)) != 0)
-	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO" : "pi bad MODE");
-		goto programend;
-	}
+	_GPIO_SET_OUTPUT(23);
+	_GPIO_SET_OUTPUT(24);
+	_GPIO_SET_OUTPUT(25);
+	_GPIO_SET_OUTPUT(26);
 
 //	if((tret = gpioSetPWMfrequency(usepin, 250)) != 250)
 //	{	printf("%s%d\n", tret == PI_BAD_USER_GPIO ? "error user gpio " : "pwm pals Hz ", tret);
@@ -265,7 +211,5 @@ int main(int argc,char *argv[])
 		}
 	}
 
-programend:
-	gpioTerminate();
-	return 0;
+	_GPIO_TERMINATE();
 }
