@@ -45,6 +45,15 @@ int main(int argc,char *argv[])
 //		goto programend;
 //	}
 
+	gpioSetPWMfrequency(4,5);
+	gpioSetPWMfrequency(5,5);
+	gpioSetPWMfrequency(6,5);
+	gpioSetPWMfrequency(7,5);
+	gpioSetPWMfrequency(8,5);
+	gpioSetPWMfrequency(9,5);
+	gpioSetPWMfrequency(10,5);
+	gpioSetPWMfrequency(11,5);
+
 	while(1)
 	{	for(i=0;i<8;i++)
 		{	if((tret = gpioPWM(4+i, gpiostate[nstate][i])) != 0)
