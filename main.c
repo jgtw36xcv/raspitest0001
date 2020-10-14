@@ -35,7 +35,9 @@ int main(int argc,char *argv[])
 	_GPIO_SET_OUTPUT(11);
 
 	_GPIO_SET_OUTPUT(17);
+
 	_GPIO_SET_OUTPUT(18);
+	_GPIO_SET_OUTPUT(19);
 
 	_GPIO_SET_OUTPUT(23);
 	_GPIO_SET_OUTPUT(24);
@@ -146,6 +148,14 @@ int main(int argc,char *argv[])
 
 			if(strcmp(str,"0:off")==0)
 			{	gpioWrite(17,0);
+			}
+
+			if(strcmp(str,"6:on")==0)
+			{	gpioWrite(19,1);
+			}
+
+			if(strcmp(str,"6:off")==0)
+			{	gpioWrite(19,0);
 			}
 
 		}
