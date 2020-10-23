@@ -6,6 +6,7 @@
 
 // BCM 4,5,6,7,8,9,10,11
 // motr
+#ifndef __MEKANAMU
 int gpiostate[7][8]=
 //   bl1 bl2 br1 br2 fl1 fl2 fr1 fr2	多分。	by takahasi
 {	{  0,  0,  0,  0,  0,  0,  0,  0},	//空転
@@ -15,8 +16,24 @@ int gpiostate[7][8]=
 	{200,  0, 50,  0, 50,  0,255,  0},	//右
 	{ 50,  0,200,  0,255,  0, 50,  0},	//左
 	{  0,200,  0,200,200,  0,200,  0},	//伸び
-
 };
+#endif
+#ifdef __MEKANAMU
+int gpiostate[12][8]=
+{	{  0,  0,  0,  0,  0,  0,  0,  0},	//空転
+	{200,  0,200,  0,255,  0,255,  0},	//正転
+	{  0,255,  0,255,  0,200,  0,200},	//逆転
+	{255,255,255,255,255,255,255,255},	//停止
+	{255,  0,255,  0,  0,255,  0,255},	//右怪転
+	{  0,255,  0,255,255,  0,255,  0},	//左怪転
+	{  0,255,255,  0,255,  0,  0,255},	//右進
+	{255,  0,  0,255,  0,255,255,  0},	//左進
+	{255,255,255,  0,255,  0,255,255},	//右前進
+	{255,  0,255,255,255,255,255,  0},	//左前進
+	{  0,255,255,255,255,255,  0,255},	//右後ろ進
+	{255,255,  0,255,  0,255,255,255},	//左後ろ進
+};
+#endif
 
 int main(int argc,char *argv[])
 {	char str[256];
@@ -140,7 +157,7 @@ int main(int argc,char *argv[])
 			}
 
 			if(strcmp(str,"1:off")==0)
-			{	
+			{
 			}
 
 			if(strcmp(str,"0:on")==0)
@@ -169,6 +186,8 @@ int main(int argc,char *argv[])
 
 		}
 
+#ifndef __MEKANAMU
+
 		if(strcmp(str,"e")==0)
 		{	nstate=0;
 		}
@@ -193,6 +212,58 @@ int main(int argc,char *argv[])
 		{	nstate=6;
 		}
 
+#endif
+#ifdef __MEKANAMU
+
+		if(strcmp(str,"s")==0)
+		{	nstate=0;
+		}
+
+		if(strcmp(str,"w")==0)
+		{	nstate=1;
+		}
+
+		if(strcmp(str,"x")==0)
+		{	nstate=2;
+		}
+
+		if(strcmp(str,"1")==0)
+		{	nstate=3;
+		}
+
+		if(strcmp(str,"r")==0)
+		{	nstate=4;
+		}
+
+		if(strcmp(str,"f")==0)
+		{	nstate=5;
+		}
+
+		if(strcmp(str,"d")==0)
+		{	nstate=6;
+		}
+
+		if(strcmp(str,"a")==0)
+		{	nstate=7;
+		}
+
+		if(strcmp(str,"e")==0)
+		{	nstate=8;
+		}
+
+		if(strcmp(str,"q")==0)
+		{	nstate=9;
+		}
+
+		if(strcmp(str,"c")==0)
+		{	nstate=10;
+		}
+
+		if(strcmp(str,"z")==0)
+		{	nstate=11;
+		}
+
+#endif
 		if(strcmp(str,"exit")==0)
 		{	break;
 		}
