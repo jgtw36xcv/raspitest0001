@@ -316,11 +316,11 @@ int main(int argc,char *argv[])
 			{	gpioWrite(20,0);
 			}
 
-			if(strcmp(str,"4:on")==0)//L1左進
+			if(strcmp(str,"4:on")==0)//L1左旋回
 			{	nstate=7;
 			}
 
-			if(strcmp(str,"5:on")==0)//R1右進
+			if(strcmp(str,"5:on")==0)//R1右旋回
 			{	nstate=6;
 			}
 
