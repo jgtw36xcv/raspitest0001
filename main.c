@@ -1,4 +1,5 @@
 #include <pigpio.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -38,6 +39,7 @@ int main(int argc,char *argv[])
 {	char str[256];
 	int nstate=0, i;
 	int inum,istate[8];
+	int exstate = 0;
 
 	_GPIO_INIT();
 
@@ -389,6 +391,11 @@ int main(int argc,char *argv[])
 		{	break;
 		}
 
+		if(strcmp(str,"shutdown")==0)
+		{	exstate = 1;
+			break;
+		}
+
 		if(strcmp(str,"funmu")==0)
 		{	scanf("%d",&inum);
 			gpioWrite(17,1);
@@ -407,4 +414,10 @@ int main(int argc,char *argv[])
 	}
 
 	_GPIO_TERMINATE();
+
+	if(exstate == 1){
+		system("bash sys_shutdown.sh");
+	}
+
+	return 0;
 }
