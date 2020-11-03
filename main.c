@@ -6,18 +6,6 @@
 
 // BCM 4,5,6,7,8,9,10,11
 // motr
-#ifndef __MEKANAMU
-int gpiostate[7][8]=
-//   bl1 bl2 br1 br2 fl1 fl2 fr1 fr2	多分。	by takahasi
-{	{  0,  0,  0,  0,  0,  0,  0,  0},	//空転
-	{200,  0,200,  0,255,  0,255,  0},	//正転
-	{  0,255,  0,255,  0,200,  0,200},	//逆転
-	{255,255,255,255,255,255,255,255},	//停止
-	{200,  0, 50,  0, 50,  0,255,  0},	//右
-	{ 50,  0,200,  0,255,  0, 50,  0},	//左
-	{  0,200,  0,200,200,  0,200,  0},	//伸び
-};
-#endif
 #ifdef __MEKANAMU
 int gpiostate[12][8]=
 {	{  0,  0,  0,  0,  0,  0,  0,  0},	//空転
@@ -32,6 +20,17 @@ int gpiostate[12][8]=
 	{255,  0,255,255,255,255,255,  0},	//左前進
 	{  0,255,255,255,255,255,  0,255},	//右後ろ進
 	{255,255,  0,255,  0,255,255,255},	//左後ろ進
+};
+#else
+int gpiostate[7][8]=
+//   bl1 bl2 br1 br2 fl1 fl2 fr1 fr2	多分。	by takahasi
+{	{  0,  0,  0,  0,  0,  0,  0,  0},	//空転
+	{200,  0,200,  0,255,  0,255,  0},	//正転
+	{  0,255,  0,255,  0,200,  0,200},	//逆転
+	{255,255,255,255,255,255,255,255},	//停止
+	{200,  0, 50,  0, 50,  0,255,  0},	//右
+	{ 50,  0,200,  0,255,  0, 50,  0},	//左
+	{  0,200,  0,200,200,  0,200,  0},	//伸び
 };
 #endif
 
@@ -85,27 +84,6 @@ int main(int argc,char *argv[])
 		}
 
 		scanf("%s",str);
-/*
-		if(strcmp(str,"s")==0)
-		{	nstate=0;
-		}
-
-		if(strcmp(str,"f")==0)
-		{	nstate=1;
-		}
-
-		if(strcmp(str,"b")==0)
-		{	nstate=2;
-		}
-
-		if(strcmp(str,"r")==0)
-		{	nstate=4;
-		}
-
-		if(strcmp(str,"l")==0)
-		{	nstate=5;
-		}
-*/
 
 /*		if(argc==2)
 		{
@@ -326,33 +304,6 @@ int main(int argc,char *argv[])
 
 		}
 
-#ifndef __MEKANAMU
-
-		if(strcmp(str,"e")==0)
-		{	nstate=0;
-		}
-
-		if(strcmp(str,"w")==0)
-		{	nstate=1;
-		}
-
-		if(strcmp(str,"s")==0)
-		{	nstate=2;
-		}
-
-		if(strcmp(str,"d")==0)
-		{	nstate=4;
-		}
-
-		if(strcmp(str,"a")==0)
-		{	nstate=5;
-		}
-
-		if(strcmp(str,"ex")==0)
-		{	nstate=6;
-		}
-
-#endif
 #ifdef __MEKANAMU
 
 		if(strcmp(str,"s")==0)
@@ -403,6 +354,32 @@ int main(int argc,char *argv[])
 		{	nstate=11;
 		}
 
+#else
+
+		if(strcmp(str,"e")==0)
+		{	nstate=0;
+		}
+
+		if(strcmp(str,"w")==0)
+		{	nstate=1;
+		}
+
+		if(strcmp(str,"s")==0)
+		{	nstate=2;
+		}
+
+		if(strcmp(str,"d")==0)
+		{	nstate=4;
+		}
+
+		if(strcmp(str,"a")==0)
+		{	nstate=5;
+		}
+
+		if(strcmp(str,"ex")==0)
+		{	nstate=6;
+		}
+
 #endif
 		if(strcmp(str,"exit")==0)
 		{	break;
@@ -418,29 +395,6 @@ int main(int argc,char *argv[])
 			gpioDelay(inum*1000*1000);
 			gpioWrite(17,0);
 		}
-
-/*
-		if((tret = gpioPWM(usepin, 6)) != 0)
-		{	puts(tret == PI_BAD_USER_GPIO ? "pi bad user gpio" : "pi bad dutycycle");
-			break;
-		}
-
-		gpioDelay(500000);
-
-		if((tret = gpioPWM(usepin, 10)) != 0)
-		{	puts(tret == PI_BAD_USER_GPIO ? "pi bad user gpio" : "pi bad dutycycle");
-			break;
-		}
-
-		gpioDelay(500000);
-
-		if((tret = gpioPWM(usepin, 14)) != 0)
-		{	puts(tret == PI_BAD_USER_GPIO ? "pi bad user gpio" : "pi bad dutycycle");
-			break;
-		}
-
-		gpioDelay(500000);
-*/
 	}
 
 	nstate = 0;
