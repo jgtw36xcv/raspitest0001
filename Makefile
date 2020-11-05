@@ -1,15 +1,13 @@
 CC := gcc
 CFLAGS := -g -Wall -Wextra
+LOADLIBES := -pthread -lpigpio -lrt
 
 main: main.o
-	$(CC) main.o -pthread -lpigpio -lrt -o main
+	$(CC) $(CFLAGS) $(LOADLIBES) main.o -o main
 
-mekanamu:
-	make clean
-	make hoge "CFLAGS=-g -Wall -Wextra -D__MEKANAMU"
-
-main.o: main.c
-	$(CC) -c main.c
+mekanamu:: clean
+	CFLAGS += -D__MEKANAMU
+mekanamu:: main;
 
 clean:
 	$(RM) main main.o
