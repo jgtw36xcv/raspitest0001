@@ -7,8 +7,7 @@ main: main.o
 
 .PHONY: mekanamu
 mekanamu:: clean
-	CFLAGS += -D__MEKANAMU
-mekanamu:: main;
+	make "CFLAGS=$(CFLAGS) -D__MEKANAMU"
 
 .PHONY: clean
 clean:
