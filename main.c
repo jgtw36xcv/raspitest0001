@@ -38,7 +38,7 @@ int gpiostate[7][8]=
 int main(int argc,char *argv[])
 {	char str[256];
 	int nstate=0, i;
-	int inum, istate[8];
+	int inum;
 	int exstate = 0;
 
 	_GPIO_INIT();
@@ -87,85 +87,6 @@ int main(int argc,char *argv[])
 
 		scanf("%s",str);
 
-/*		if(argc==2)
-		{
-			if(strcmp(str,"6:")==0)		//左右
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=4;
-				}
-			}
-
-			if(strcmp(str,"6:-32767")==0)
-			{	nstate=5;
-			}
-
-			if(strcmp(str,"7:")==0)
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=2;
-				}
-			}
-
-			if(strcmp(str,"7:-32767")==0)
-			{	nstate=1;
-			}
-
-			if(strcmp(str,"3:on")==0)
-			{	static int ledstate = 0;
-				ledstate++;
-				gpioWrite(23,(ledstate>>0)&1);
-				gpioWrite(24,(ledstate>>1)&1);
-				gpioWrite(25,(ledstate>>2)&1);
-				gpioWrite(26,(ledstate>>3)&1);
-			}
-
-			if(strcmp(str,"3:off")==0)
-			{
-			}
-
-			if(strcmp(str,"2:on")==0)
-			{	gpioWrite(18,1);
-			}
-
-			if(strcmp(str,"2:off")==0)
-			{	gpioWrite(18,0);
-			}
-
-			if(strcmp(str,"1:on")==0)
-			{	nstate=0;
-			}
-
-			if(strcmp(str,"1:off")==0)
-			{
-			}
-
-			if(strcmp(str,"0:on")==0)
-			{	gpioWrite(17,1);
-			}
-
-			if(strcmp(str,"0:off")==0)
-			{	gpioWrite(17,0);
-			}
-
-			if(strcmp(str,"6:on")==0)
-			{	gpioWrite(19,1);
-			}
-
-			if(strcmp(str,"6:off")==0)
-			{	gpioWrite(19,0);
-			}
-
-			if(strcmp(str,"7:on")==0)
-			{	gpioWrite(20,1);
-			}
-
-			if(strcmp(str,"7:off")==0)
-			{	gpioWrite(20,0);
-			}
-
-		}
-*/
 /*		int gpiostate[12][8]=
 		{	{  0,  0,  0,  0,  0,  0,  0,  0},	//0空転
 			{200,  0,200,  0,255,  0,255,  0},	//1正転
