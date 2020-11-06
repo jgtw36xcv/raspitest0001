@@ -337,7 +337,7 @@ int main(int argc,char *argv[])
 	_GPIO_TERMINATE();
 
 	if(exstate == 1){
-		system("bash sys_shutdown.sh");
+		system("bash ./sys_shutdown.sh");
 	}
 
 	return 0;

@@ -1,3 +1,3 @@
-﻿#!/bin/sh
-sudo shutdown -h now
+#!/bin/sh
+poweroff
 exit 0
