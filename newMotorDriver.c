@@ -1,4 +1,5 @@
 ﻿#include <pigpio.h>
+#include <stdio.h>
 #include "newMotorDriver.h"
 
 
@@ -10,7 +11,7 @@ MotorDriver InitMotorDriverOpin(int forword, int back, int power)
 	return ret;
 }
 
-int SetMotorDriverMode(MotorDriver th, int mode)
+void SetMotorDriverMode(MotorDriver th, int mode)
 {	if(mode == 1)
 	{	gpioWrite(th.f,1);
 		gpioWrite(th.b,0);
@@ -23,10 +24,10 @@ int SetMotorDriverMode(MotorDriver th, int mode)
 	}
 }
 
-int SetMotorDriverPower(MotorDriver th, int power)
-{	if((tret = gpioPWM(th.p, power)) != 0)
+void SetMotorDriverPower(MotorDriver th, int power)
+{	int tret;
+	if((tret = gpioPWM(th.p, power)) != 0)
 	{	puts(tret == PI_BAD_USER_GPIO ? "pi bad user gpio" : "pi bad dutycycle");
-		break;
 	}
 }
 
