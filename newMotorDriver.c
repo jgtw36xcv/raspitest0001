@@ -5,6 +5,19 @@
 
 MotorDriver InitMotorDriverOpin(int forword, int back, int power)
 {	MotorDriver ret;
+	int tret;
+	if((tret = gpioSetMode(forword, PI_OUTPUT)) != 0)
+	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO port" : "pi bad MODE port");
+		return null;
+	}
+	if((tret = gpioSetMode(back, PI_OUTPUT)) != 0)
+	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO port" : "pi bad MODE port");
+		return null;
+	}
+	if((tret = gpioSetMode(power, PI_OUTPUT)) != 0)
+	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO port" : "pi bad MODE port");
+		return null;
+	}
 	ret.f=forword;
 	ret.b=back;
 	ret.p=power;
