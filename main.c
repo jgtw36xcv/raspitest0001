@@ -319,6 +319,14 @@ int main(int argc,char *argv[])
 
 		if(strcmp(str,"funmu")==0)
 		{	scanf("%d",&inum);
+			if(inum==0)
+				scanf("%s",str);
+			if(strcmp(str,"ex")==0)
+			{	gpioWrite(17,1);
+				scanf("%d",&inum);
+				gpioWrite(17,0);
+				continue;
+			}
 			gpioWrite(17,1);
 			gpioDelay(inum*1000*1000);
 			gpioWrite(17,0);
