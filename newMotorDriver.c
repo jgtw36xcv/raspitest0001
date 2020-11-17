@@ -25,22 +25,18 @@ MotorDriver InitMotorDriverOpin(int forword, int back, int power)
 }
 
 void SetMotorDriverMode(MotorDriver th, int mode)
-{	if(mode == 1)
-	{	gpioWrite(th.f,1);
-		gpioWrite(th.b,0);
-	}else if(mode == 2)
-	{	gpioWrite(th.f,0);
-		gpioWrite(th.b,1);
-	}else
-	{	gpioWrite(th.f,0);
-		gpioWrite(th.b,0);
-	}
+{	gpioWrite(th.f,mode&1);
+	gpioWrite(th.b,(mode>>1)&1);
 }
 
 void SetMotorDriverPower(MotorDriver th, int power)
 {	int tret;
-	if((tret = gpioPWM(th.p, power)) != 0)
+	if((tret = gpioPWM(th.p, gpioGetPWMrange(th.p)-power-1)) != 0)
 	{	puts(tret == PI_BAD_USER_GPIO ? "pi bad user gpio" : "pi bad dutycycle");
 	}
 }
 
+void SetMotorDriverStatus(MotorDriver th, int status)
+{	SetMotorDriverMode(th, status>>16);
+	SetMotorDriverPower(th, status&0xffff);
+}
