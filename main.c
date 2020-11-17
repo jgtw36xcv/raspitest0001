@@ -30,10 +30,10 @@ int main(void)
 
 	_GPIO_INIT();
 
-	MotorDriver blMD = IintMortorDriverOpin(4,  8, 12),
-				brMD = InitMortorDriverOpin(5,  9, 13),
-				flMD = InitMortotDriverOpin(6, 10, 14),
-				frMD = InitMortotDriverOpin(7, 11, 15);
+	MotorDriver blMD = InitMotorDriverOpin(4,  8, 12),
+				brMD = InitMotorDriverOpin(5,  9, 13),
+				flMD = InitMotorDriverOpin(6, 10, 14),
+				frMD = InitMotorDriverOpin(7, 11, 15);
 
 	_GPIO_SET_OUTPUT(17);
 
@@ -52,10 +52,10 @@ int main(void)
 	gpioSetPWMfrequency(7,5);
 
 	while(1)
-	{	MotorDriverStatus(blMD, MDstate[nstate][0]);
-		MotorDriverStatus(brMD, MDstate[nstate][1]);
-		MotorDriverStatus(flMD, MDstate[nstate][2]);
-		MotorDriverStatus(frMD, MDstate[nstate][3]);
+	{	SetMotorDriverStatus(blMD, MDstate[nstate][0]);
+		SetMotorDriverStatus(brMD, MDstate[nstate][1]);
+		SetMotorDriverStatus(flMD, MDstate[nstate][2]);
+		SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
 		scanf("%s",str);
 
@@ -258,10 +258,10 @@ int main(void)
 
 	nstate = 0;
 
-	MotorDriverStatus(blMD, MDstate[nstate][0]);
-	MotorDriverStatus(brMD, MDstate[nstate][1]);
-	MotorDriverStatus(flMD, MDstate[nstate][2]);
-	MotorDriverStatus(frMD, MDstate[nstate][3]);
+	SetMotorDriverStatus(blMD, MDstate[nstate][0]);
+	SetMotorDriverStatus(brMD, MDstate[nstate][1]);
+	SetMotorDriverStatus(flMD, MDstate[nstate][2]);
+	SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
 	_GPIO_TERMINATE();
 

@@ -2,8 +2,8 @@ CC := gcc
 CFLAGS := -g -Wall -Wextra
 LOADLIBES := -pthread -lpigpio -lrt
 
-main: main.o
-	$(CC) $(CFLAGS) $(LOADLIBES) -o $@ main.o
+main: main.o newMotorDriver.o
+	$(CC) $(CFLAGS) $(LOADLIBES) -o $@ main.o newMotorDriver.o
 
 .PHONY: mekanamu
 mekanamu:: clean
