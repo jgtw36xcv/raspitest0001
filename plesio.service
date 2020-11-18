@@ -1,0 +1,13 @@
+[Unit]
+Description=plesio service
+After=syslog.target
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/pi/Documents/projects/raspitest0001
+ExecStart=sudo ./main service
+TimeoutStopSec=5
+StandardOutput=null
+
+[Install]
+WantedBy = multi-user.target

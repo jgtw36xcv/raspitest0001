@@ -5,10 +5,51 @@ LOADLIBES := -pthread -lpigpio -lrt
 main: main.o newMotorDriver.o
 	$(CC) $(CFLAGS) $(LOADLIBES) -o $@ main.o newMotorDriver.o
 
-.PHONY: mekanamu
-mekanamu:: clean
-	make "CFLAGS=$(CFLAGS) -D__MEKANAMU"
-
 .PHONY: clean
 clean:
 	$(RM) main main.o
+
+.PHONY: install
+install: main
+	if [ -f "installd" ]; then\
+	  echo "Already installed"\
+	else\
+	  sudo cp plesio.service /etc/systemd/system/\
+	  sudo systemctl daemon-reload\
+	  touch installd\
+	fi
+
+.PHONY: uninstall
+uninstall:
+	if [ -f "/etc/systemd/system/plesio.service" ]; then\
+	  sudo rm /etc/systemd/system/plesio.service\
+	  systemctl daemon-reload\
+	  rm installd\
+	else\
+	  echo "Not installed"\
+	fi
+
+.PHONY: start
+start:
+	if [ -f "installd" ]; then\
+	  sudo systemctl start plesio\
+	fi
+
+.PHONY: stop
+stop:
+	if [ -f "installd" ]; then\
+	  sudo systemctl stop plesio\
+	fi
+
+.PHONY: autostart
+start:
+	if [ -f "installd" ]; then\
+	  sudo systemctl enable plesio\
+	fi
+
+.PHONY: autostop
+stop:
+	if [ -f "installd" ]; then\
+	  sudo systemctl disable plesio\
+	fi
+
