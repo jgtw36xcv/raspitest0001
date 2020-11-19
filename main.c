@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <signal.h>
 
 #include "main.h"
 #include "newMotorDriver.h"
@@ -23,11 +27,13 @@ int MDstate[12][4]=
 	{Mo_brake	,Mo_backward,Mo_backward,Mo_brake	},	//左後ろ進
 };
 
-
+volatile int serverSock, clientSock;
 
 void programExit(int m)
 {	int ret = 0;
 	gpioTerminate();
+	close(serverSock);
+	close(clientSock);
 
 	if((m&EXIT_ERROR) != 0)
 		ret = -1;
@@ -43,18 +49,43 @@ void shutdwnTimerFunc(void)
 	if(gpioRead(24) == 1)
 		i++;
 	else
-		i = 0;
+	{	i--;
+		if(i<0)
+			i=0;
+	}
 	if(i > 30)
 		programExit(EXIT_SHUTDOWN);
 }
 
 int main(void)
 {	char str[256];
-	int nstate=0;
-	int inum;
-//	int exstate = 0;
+	int nstate=0, inum, size, tret;
+	struct sockaddr_in serverSockAddr, clientSockAddr;
+	unsigned short serverPort = 12479;
+	unsigned int sockAddrLen;
 
-	int tret;
+	sockAddrLen = sizeof(clientSockAddr);
+
+	if((serverSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+	{	perror("socket() failed.");
+		programExit(EXIT_ERROR);
+	}
+
+	memset(&serverSockAddr, 0, sizeof(serverSockAddr));
+	serverSockAddr.sin_family = AF_INET;
+	serverSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	serverSockAddr.sin_port = htons(serverPort);
+
+	if(bind(serverSock, (struct sockaddr *) &serverSockAddr, sizeof(serverSockAddr)) < 0)
+	{	perror("bind() failed.");
+		programExit(EXIT_ERROR);
+	}
+
+	if(listen(serverSock, 3) < 0)
+	{	perror("listen() failed.");
+		programExit(EXIT_ERROR);
+	}
+
 	if(gpioInitialise() == PI_INIT_FAILED)
 	{	puts("pi init failed.");
 		programExit(EXIT_ERROR);
@@ -92,206 +123,221 @@ int main(void)
 	gpioSetPWMfrequency(7,5);
 
 	while(1)
-	{	SetMotorDriverStatus(blMD, MDstate[nstate][0]);
-		SetMotorDriverStatus(brMD, MDstate[nstate][1]);
-		SetMotorDriverStatus(flMD, MDstate[nstate][2]);
-		SetMotorDriverStatus(frMD, MDstate[nstate][3]);
+	{	if((clientSock = accept(serverSock, (struct sockaddr *) &clientSockAddr, &sockAddrLen)) < 0)
+		{	perror("accept() failed.");
+			programExit(EXIT_ERROR);
+		}
+		while(1)
+		{	SetMotorDriverStatus(blMD, MDstate[nstate][0]);
+			SetMotorDriverStatus(brMD, MDstate[nstate][1]);
+			SetMotorDriverStatus(flMD, MDstate[nstate][2]);
+			SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
-		scanf("%s",str);
+			scanf("%s",str);
+			if((size = recv(sock, str, sizeof(str), 0)) == -1)
+			{	perror("recv() failed.");
+				close(clientSock);
+				break;
+			}else if(size==0)
+			{	fprintf(stderr, "connection closed by remote host.\n");
+				close(clientSock);
+				break;
+			}
 
-		//十字キー
-		if(strcmp(str,"6:")==0)		//右進
-		{	scanf("%s",str);
-			if(strcmp(str,"32767")==0)
+			//十字キー
+			if(strcmp(str,"6:")==0)		//右進
+			{	scanf("%s",str);
+				if(strcmp(str,"32767")==0)
+				{	nstate=6;
+				}
+			}
+
+			if(strcmp(str,"6:-32767")==0)	//左進
+			{	nstate=7;
+			}
+
+			if(strcmp(str,"7:")==0)		//逆転
+			{	scanf("%s",str);
+				if(strcmp(str,"32767")==0)
+				{	nstate=2;
+				}
+			}
+
+			if(strcmp(str,"7:-32767")==0)	//正転
+			{	nstate=1;
+			}
+
+			//右スティック横軸
+			if(strcmp(str,"3:")==0)		//右回転
+			{	scanf("%s",str);
+				if(strcmp(str,"32767")==0)
+				{	nstate=4;
+				}
+			}
+
+			if(strcmp(str,"3:-32767")==0)	//左回転
+			{	nstate=5;
+			}
+
+			//左スティック縦軸
+			if(strcmp(str,"1:")==0)		//逆転
+			{	scanf("%s",str);
+				if(strcmp(str,"32767")==0)
+				{	nstate=2;
+				}
+			}
+
+			if(strcmp(str,"1:-32767")==0)	//正転
+			{	nstate=1;
+			}
+
+			//左スティック横軸
+			if(strcmp(str,"0:")==0)		//右進
+			{	scanf("%s",str);
+				if(strcmp(str,"32767")==0)
+				{	nstate=6;
+				}
+			}
+
+			if(strcmp(str,"0:-32767")==0)	//左進
+			{	nstate=7;
+			}
+
+			if(strcmp(str,"3:on")==0)
+			{	static int ledstate = 0;
+				ledstate++;
+				gpioWrite(23,(ledstate>>0)&1);
+				gpioWrite(24,(ledstate>>1)&1);
+				gpioWrite(25,(ledstate>>2)&1);
+				gpioWrite(26,(ledstate>>3)&1);
+			}
+
+			if(strcmp(str,"3:off")==0)
+			{
+			}
+
+			if(strcmp(str,"2:on")==0)
+			{	gpioWrite(18,1);
+			}
+
+			if(strcmp(str,"2:off")==0)
+			{	gpioWrite(18,0);
+			}
+
+			if(strcmp(str,"1:on")==0)
+			{	nstate=0;
+			}
+
+			if(strcmp(str,"1:off")==0)
+			{
+			}
+
+			if(strcmp(str,"0:on")==0)
+			{	gpioWrite(17,1);
+			}
+
+			if(strcmp(str,"0:off")==0)
+			{	gpioWrite(17,0);
+			}
+
+			if(strcmp(str,"6:on")==0)
+			{	gpioWrite(19,1);
+			}
+
+			if(strcmp(str,"6:off")==0)
+			{	gpioWrite(19,0);
+			}
+
+			if(strcmp(str,"7:on")==0)
+			{	gpioWrite(20,1);
+			}
+
+			if(strcmp(str,"7:off")==0)
+			{	gpioWrite(20,0);
+			}
+
+			if(strcmp(str,"4:on")==0)//L1左旋回
+			{	nstate=7;
+			}
+
+			if(strcmp(str,"5:on")==0)//R1右旋回
 			{	nstate=6;
 			}
-		}
 
-		if(strcmp(str,"6:-32767")==0)	//左進
-		{	nstate=7;
-		}
+			if(strcmp(str,"s")==0)
+			{	nstate=0;
+			}
 
-		if(strcmp(str,"7:")==0)		//逆転
-		{	scanf("%s",str);
-			if(strcmp(str,"32767")==0)
+			if(strcmp(str,"w")==0)
+			{	nstate=1;
+			}
+
+			if(strcmp(str,"x")==0)
 			{	nstate=2;
 			}
-		}
 
-		if(strcmp(str,"7:-32767")==0)	//正転
-		{	nstate=1;
-		}
+			if(strcmp(str,"1")==0)
+			{	nstate=3;
+			}
 
-		//右スティック横軸
-		if(strcmp(str,"3:")==0)		//右回転
-		{	scanf("%s",str);
-			if(strcmp(str,"32767")==0)
+			if(strcmp(str,"r")==0)
 			{	nstate=4;
 			}
-		}
 
-		if(strcmp(str,"3:-32767")==0)	//左回転
-		{	nstate=5;
-		}
-
-		//左スティック縦軸
-		if(strcmp(str,"1:")==0)		//逆転
-		{	scanf("%s",str);
-			if(strcmp(str,"32767")==0)
-			{	nstate=2;
+			if(strcmp(str,"f")==0)
+			{	nstate=5;
 			}
-		}
 
-		if(strcmp(str,"1:-32767")==0)	//正転
-		{	nstate=1;
-		}
-
-		//左スティック横軸
-		if(strcmp(str,"0:")==0)		//右進
-		{	scanf("%s",str);
-			if(strcmp(str,"32767")==0)
+			if(strcmp(str,"d")==0)
 			{	nstate=6;
 			}
-		}
 
-		if(strcmp(str,"0:-32767")==0)	//左進
-		{	nstate=7;
-		}
-
-		if(strcmp(str,"3:on")==0)
-		{	static int ledstate = 0;
-			ledstate++;
-			gpioWrite(23,(ledstate>>0)&1);
-			gpioWrite(24,(ledstate>>1)&1);
-			gpioWrite(25,(ledstate>>2)&1);
-			gpioWrite(26,(ledstate>>3)&1);
-		}
-
-		if(strcmp(str,"3:off")==0)
-		{
-		}
-
-		if(strcmp(str,"2:on")==0)
-		{	gpioWrite(18,1);
-		}
-
-		if(strcmp(str,"2:off")==0)
-		{	gpioWrite(18,0);
-		}
-
-		if(strcmp(str,"1:on")==0)
-		{	nstate=0;
-		}
-
-		if(strcmp(str,"1:off")==0)
-		{
-		}
-
-		if(strcmp(str,"0:on")==0)
-		{	gpioWrite(17,1);
-		}
-
-		if(strcmp(str,"0:off")==0)
-		{	gpioWrite(17,0);
-		}
-
-		if(strcmp(str,"6:on")==0)
-		{	gpioWrite(19,1);
-		}
-
-		if(strcmp(str,"6:off")==0)
-		{	gpioWrite(19,0);
-		}
-
-		if(strcmp(str,"7:on")==0)
-		{	gpioWrite(20,1);
-		}
-
-		if(strcmp(str,"7:off")==0)
-		{	gpioWrite(20,0);
-		}
-
-		if(strcmp(str,"4:on")==0)//L1左旋回
-		{	nstate=7;
-		}
-
-		if(strcmp(str,"5:on")==0)//R1右旋回
-		{	nstate=6;
-		}
-
-		if(strcmp(str,"s")==0)
-		{	nstate=0;
-		}
-
-		if(strcmp(str,"w")==0)
-		{	nstate=1;
-		}
-
-		if(strcmp(str,"x")==0)
-		{	nstate=2;
-		}
-
-		if(strcmp(str,"1")==0)
-		{	nstate=3;
-		}
-
-		if(strcmp(str,"r")==0)
-		{	nstate=4;
-		}
-
-		if(strcmp(str,"f")==0)
-		{	nstate=5;
-		}
-
-		if(strcmp(str,"d")==0)
-		{	nstate=6;
-		}
-
-		if(strcmp(str,"a")==0)
-		{	nstate=7;
-		}
-
-		if(strcmp(str,"e")==0)
-		{	nstate=8;
-		}
-
-		if(strcmp(str,"q")==0)
-		{	nstate=9;
-		}
-
-		if(strcmp(str,"c")==0)
-		{	nstate=10;
-		}
-
-		if(strcmp(str,"z")==0)
-		{	nstate=11;
-		}
-
-		if(strcmp(str,"exit")==0)
-		{	break;
-		}
-
-		if(strcmp(str,"quit")==0)
-		{	break;
-		}
-
-		if(strcmp(str,"shutdown")==0)
-		{	programExit(EXIT_SHUTDOWN);
-		}
-
-		if(strcmp(str,"funmu")==0)
-		{	scanf("%d",&inum);
-			if(inum==0)
-				scanf("%s",str);
-			if(strcmp(str,"ex")==0)
-			{	gpioWrite(17,1);
-				scanf("%d",&inum);
-				gpioWrite(17,0);
-				continue;
+			if(strcmp(str,"a")==0)
+			{	nstate=7;
 			}
-			gpioWrite(17,1);
-			gpioDelay(inum*1000*1000);
-			gpioWrite(17,0);
+
+			if(strcmp(str,"e")==0)
+			{	nstate=8;
+			}
+
+			if(strcmp(str,"q")==0)
+			{	nstate=9;
+			}
+
+			if(strcmp(str,"c")==0)
+			{	nstate=10;
+			}
+
+			if(strcmp(str,"z")==0)
+			{	nstate=11;
+			}
+
+			if(strcmp(str,"exit")==0)
+			{	break;
+			}
+
+			if(strcmp(str,"quit")==0)
+			{	break;
+			}
+
+			if(strcmp(str,"shutdown")==0)
+			{	programExit(EXIT_SHUTDOWN);
+			}
+
+			if(strcmp(str,"funmu")==0)
+			{	scanf("%d",&inum);
+				if(inum==0)
+					scanf("%s",str);
+				if(strcmp(str,"ex")==0)
+				{	gpioWrite(17,1);
+					scanf("%d",&inum);
+					gpioWrite(17,0);
+					continue;
+				}
+				gpioWrite(17,1);
+				gpioDelay(inum*1000*1000);
+				gpioWrite(17,0);
+			}
 		}
 	}
 
