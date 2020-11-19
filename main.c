@@ -26,7 +26,7 @@ int MDstate[12][4]=
 
 
 void programExit(int m)
-{	ret = 0;
+{	int ret = 0;
 	gpioTerminate();
 
 	if(m&EXIT_ERROR != 0)
@@ -45,14 +45,14 @@ void shutdwnTimerFunc(void)
 	else
 		i = 0;
 	if(i > 30)
-		rpogramExit(EXIT_SHUTDOWN);
+		programExit(EXIT_SHUTDOWN);
 }
 
 int main(void)
 {	char str[256];
 	int nstate=0;
 	int inum;
-	int exstate = 0;
+//	int exstate = 0;
 
 	int tret;
 	if(gpioInitialise() == PI_INIT_FAILED)
