@@ -313,11 +313,11 @@ int main(void)
 			}
 
 			if(strcmp(str,"exit")==0)
-			{	break;
+			{	programExit(EXIT_SUCCESS);
 			}
 
 			if(strcmp(str,"quit")==0)
-			{	break;
+			{	programExit(EXIT_SUCCESS);
 			}
 
 			if(strcmp(str,"shutdown")==0)
