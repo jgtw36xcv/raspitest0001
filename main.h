@@ -1,21 +1,10 @@
 ﻿#ifndef __MAINH__
 #define __MAINH__
 
-#define _GPIO_INIT() \
-int tret; \
-if(gpioInitialise() == PI_INIT_FAILED) \
-{	puts("pi init failed."); \
-	goto programend; \
-}
+void programExit(int m);
 
-#define _GPIO_SET_OUTPUT(port) \
-if((tret = gpioSetMode(port, PI_OUTPUT)) != 0) \
-{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO port" : "pi bad MODE port"); \
-	goto programend; \
-}
-
-#define _GPIO_TERMINATE() \
-programend: \
-	gpioTerminate();
+#define EXIT_SHUTDOWN	0x1<<0
+#define EXIT_ERROR		0x1<<1
+#define EXIT_DEFAULT	0x0<<0
 
 #endif

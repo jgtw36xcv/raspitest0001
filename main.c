@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "main.h"
 #include "newMotorDriver.h"
@@ -22,18 +23,53 @@ int MDstate[12][4]=
 	{Mo_brake	,Mo_backward,Mo_backward,Mo_brake	},	//左後ろ進
 };
 
+
+
+void programExit(int m)
+{	ret = 0;
+	gpioTerminate();
+
+	if(m&EXIT_ERROR != 0)
+		ret = -1;
+
+	if(m&EXIT_SHUTDOWN != 0)
+		system("bash ./sys_shutdown.sh");
+
+	exit(ret);
+}
+
+void shutdwnTimerFunc(void)
+{	static int i = 0;
+	if(gpioRead(24) == 1)
+		i++;
+	else
+		i = 0;
+	if(i > 30)
+		rpogramExit(EXIT_SHUTDOWN);
+}
+
 int main(void)
 {	char str[256];
 	int nstate=0;
 	int inum;
 	int exstate = 0;
 
-	_GPIO_INIT();
+	int tret;
+	if(gpioInitialise() == PI_INIT_FAILED)
+	{	puts("pi init failed.");
+		programExit(EXIT_ERROR);
+	}
 
 	MotorDriver blMD = InitMotorDriverOpin(4,  8, 12),
 				brMD = InitMotorDriverOpin(5,  9, 13),
 				flMD = InitMotorDriverOpin(6, 10, 14),
 				frMD = InitMotorDriverOpin(7, 11, 15);
+
+#define _GPIO_SET_OUTPUT(port) \
+	if((tret = gpioSetMode(port, PI_OUTPUT)) != 0) \
+	{	puts(tret == PI_BAD_GPIO ? "pi bad GPIO port" : "pi bad MODE port"); \
+		programExit(EXIT_ERROR); \
+	}
 
 	_GPIO_SET_OUTPUT(17);
 
@@ -45,6 +81,10 @@ int main(void)
 	_GPIO_SET_OUTPUT(24);
 	_GPIO_SET_OUTPUT(25);
 	_GPIO_SET_OUTPUT(26);
+
+	gpioSetMode(24, PI_INPUT);
+	gpioSetPullUpDwn(24, PI_PUD_DOWN);
+	gpioSetTimerFunc(0, 100, shutdwnTimerFunc);
 
 	gpioSetPWMfrequency(4,5);
 	gpioSetPWMfrequency(5,5);
@@ -263,11 +303,5 @@ int main(void)
 	SetMotorDriverStatus(flMD, MDstate[nstate][2]);
 	SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
-	_GPIO_TERMINATE();
-
-	if(exstate == 1){
-		system("bash ./sys_shutdown.sh");
-	}
-
-	return 0;
+	programExit(0);
 }
