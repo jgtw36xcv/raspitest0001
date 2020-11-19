@@ -134,7 +134,7 @@ int main(void)
 			SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
 			scanf("%s",str);
-			if((size = recv(sock, str, sizeof(str), 0)) == -1)
+			if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
 			{	perror("recv() failed.");
 				close(clientSock);
 				break;
