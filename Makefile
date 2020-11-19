@@ -31,16 +31,16 @@ uninstall:
 
 .PHONY: start
 start:
-	if [ -f "installd" ]; then sudo systemctl start plesio; fi;
+	if [ -f "installd" ]; then sudo systemctl start plesio; else echo "Not installd"; fi;
 
 .PHONY: stop
 stop:
-	if [ -f "installd" ]; then sudo systemctl stop plesio; fi;
+	if [ -f "installd" ]; then sudo systemctl stop plesio; else echo "Not installd"; fi;
 
 .PHONY: autostart
 autostart:
-	if [ -f "installd" ]; then sudo systemctl enable plesio; fi;
+	if [ -f "installd" ]; then sudo systemctl enable plesio; else echo "Not installd"; fi;
 
 .PHONY: autostop
 autostop:
-	if [ -f "installd" ]; then sudo systemctl disable plesio; fi;
+	if [ -f "installd" ]; then sudo systemctl disable plesio; else echo "Not installd"; fi;
