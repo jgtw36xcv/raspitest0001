@@ -29,10 +29,10 @@ void programExit(int m)
 {	int ret = 0;
 	gpioTerminate();
 
-	if(m&EXIT_ERROR != 0)
+	if((m&EXIT_ERROR) != 0)
 		ret = -1;
 
-	if(m&EXIT_SHUTDOWN != 0)
+	if((m&EXIT_SHUTDOWN) != 0)
 		system("bash ./sys_shutdown.sh");
 
 	exit(ret);
@@ -83,7 +83,7 @@ int main(void)
 	_GPIO_SET_OUTPUT(26);
 
 	gpioSetMode(24, PI_INPUT);
-	gpioSetPullUpDwn(24, PI_PUD_DOWN);
+	gpioSetPullUpDown(24, PI_PUD_DOWN);
 	gpioSetTimerFunc(0, 100, shutdwnTimerFunc);
 
 	gpioSetPWMfrequency(4,5);
@@ -276,8 +276,7 @@ int main(void)
 		}
 
 		if(strcmp(str,"shutdown")==0)
-		{	exstate = 1;
-			break;
+		{	programExit(EXIT_SHUTDOWN);
 		}
 
 		if(strcmp(str,"funmu")==0)
@@ -303,5 +302,5 @@ int main(void)
 	SetMotorDriverStatus(flMD, MDstate[nstate][2]);
 	SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
-	programExit(0);
+	programExit(EXIT_DEFAULT);
 }
