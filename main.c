@@ -348,5 +348,5 @@ int main(void)
 	SetMotorDriverStatus(flMD, MDstate[nstate][2]);
 	SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
-	programExit(EXIT_DEFAULT);
+	programExit(EXIT_SUCCESS);
 }
