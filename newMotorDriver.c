@@ -3,7 +3,7 @@
 #include "newMotorDriver.h"
 
 
-MotorDriver InitMotorDriverOpin(int forword, int back, int power)
+MotorDriver InitMotorDriverOpin(int power, int forword, int back)
 {	MotorDriver ret;
 	int tret;
 	if((tret = gpioSetMode(forword, PI_OUTPUT)) != 0)

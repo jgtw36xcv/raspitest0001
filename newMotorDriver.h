@@ -10,7 +10,7 @@ typedef struct MotorDriver_s {
 	int f, b, p;
 } MotorDriver;
 
-MotorDriver InitMotorDriverOpin(int forword, int back, int power);
+MotorDriver InitMotorDriverOpin(int power, int forword, int back);
 
 void SetMotorDriverMode(MotorDriver th, int mode);
 
