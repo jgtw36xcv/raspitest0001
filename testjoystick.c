@@ -12,7 +12,7 @@
 
 int main(void)
 {	int fd, Socket, fl = 1;
-	char pstr[256];
+	char str[256];
 	struct js_event js;
 	struct sockaddr_in serverSockAddr;
 	unsigned short serverPort = 12479;
@@ -52,45 +52,28 @@ int main(void)
 			ioctl(fd, JSIOCGBUTTONS, &num_of_buttons);
 			ioctl(fd, JSIOCGNAME(80), &temstr);
 
-			axis = (int *)calloc(num_of_axis, sizeof(int));
-			button = (char *)calloc(num_of_buttons, sizeof(char));
-
 			while(1)
 			{	if(read(fd, &js, sizeof(struct js_event)) < 0)
 				{	break;
-					fl = 0;
 				}
 				switch(js.type&~JS_EVENT_INIT)
 				{	case JS_EVENT_AXIS:
-						axis   [ js.number ] = js.value;
+						sprintf(str, "%d:%6d ", js.number, js.value);
 						break;
 					case JS_EVENT_BUTTON:
-						button [ js.number ] = js.value;
+						sprintf(str, "%d:%s ", js.number, js.value == 1 ? "on " : "off");
 						break;
 					default:
 						continue;
 				}
-				sprintf(pstr, "");
-				for(x = 0; x < num_of_axis; x++)
-				{	sprintf(temstr, "%d:%6d ", x, axis[x]);
-					strcat(pstr, temstr);
-				}
 
-				for(x = 0; x < num_of_buttons; x++)
-				{	sprintf(temstr, "%d:%s ", x, button[x] == 1 ? "on " : "off");
-					strcat(pstr, temstr);
-				}
-
-				if(send(Socket, pstr, (size_t) strlen(pstr)+1, 0) != strlen(pstr)+1)
+				x = strlen(str)+1;
+				if(send(Socket, str, (size_t) x, 0) != x)
 				{	perror("send() failed.");
 					fl = 0;
 					break;
 				}
-				printf("\n%s\n",pstr);
-				fflush(stdout);
 			}
-			free(axis);
-			free(button);
 			close(fd);
 		}
 		close(Socket);
