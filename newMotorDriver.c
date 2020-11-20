@@ -28,7 +28,7 @@ void SetMotorDriverMode(MotorDriver th, int mode)
 
 void SetMotorDriverPower(MotorDriver th, int power)
 {	int tret;
-	if((tret = gpioPWM(th.p, gpioGetPWMrange(th.p)-power-1)) != 0)
+	if((tret = gpioPWM(th.p, gpioGetPWMrange(th.p)-power)) != 0)
 	{	puts(tret == PI_BAD_USER_GPIO ? "pi bad user gpio" : "pi bad dutycycle");
 	}
 }

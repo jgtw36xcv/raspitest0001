@@ -57,32 +57,7 @@ int main(void)
 			button = (char *)calloc(num_of_buttons, sizeof(char));
 
 			while(1)
-			{	if(read(fd, &js, sizeof(struct js_event)) < 0)
-				{	break;
-					fl = 0;
-				}
-				switch(js.type&~JS_EVENT_INIT)
-				{	case JS_EVENT_AXIS:
-						axis   [ js.number ] = js.value;
-						break;
-					case JS_EVENT_BUTTON:
-						button [ js.number ] = js.value;
-						break;
-					default:
-						continue;
-				}
-				sprintf(pstr, "");
-				for(x = 0; x < num_of_axis; x++)
-				{	sprintf(temstr, "%d:%6d ", x, axis[x]);
-					strcat(pstr, temstr);
-				}
-
-				strcat(pstr, "B  ");
-
-				for(x = 0; x < num_of_buttons; x++)
-				{	sprintf(temstr, "%d:%s ", x, button[x] == 1 ? "on " : "off");
-					strcat(pstr, temstr);
-				}
+			{	scanf("%s", pstr);
 				if(send(Socket, pstr, (size_t) strlen(pstr)+1, 0) != strlen(pstr)+1)
 				{	perror("send() failed.");
 					fl = 0;

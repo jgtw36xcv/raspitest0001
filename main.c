@@ -11,6 +11,8 @@
 #include "main.h"
 #include "newMotorDriver.h"
 
+void programExit(int m);
+
 // motr
 int MDstate[12][4]=
 {	{Mo_idle	,Mo_idle	,Mo_idle	,Mo_idle	},	//空転
@@ -28,6 +30,10 @@ int MDstate[12][4]=
 };
 
 volatile int serverSock, clientSock;
+
+void signal_handler(int sig)
+{	programExit(EXIT_SUCCESS);
+}
 
 void programExit(int m)
 {	int ret = 0;
@@ -65,6 +71,9 @@ int main(void)
 	unsigned int sockAddrLen;
 
 	sockAddrLen = sizeof(clientSockAddr);
+
+	signal(SIGINT, signal_handler);
+	signal(SIGSTOP, SIG_DFL);
 
 	if((serverSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	{	perror("socket() failed.");
@@ -133,7 +142,7 @@ int main(void)
 			SetMotorDriverStatus(flMD, MDstate[nstate][2]);
 			SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
-			scanf("%s",str);
+			//scanf("%s",str);
 			if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
 			{	perror("recv() failed.");
 				close(clientSock);
@@ -143,6 +152,8 @@ int main(void)
 				close(clientSock);
 				break;
 			}
+
+			puts(str);
 
 			//十字キー
 			if(strcmp(str,"6:")==0)		//右進
