@@ -36,12 +36,12 @@ int main(void)
 		}
 
 		while(1)
-		{	scanf("%s", pstr);
-			if(send(Socket, pstr, (size_t) strlen(pstr)+1, 0) != strlen(pstr)+1)
+		{	scanf("%s", str);
+			if(send(Socket, str, (size_t) strlen(str)+1, 0) != strlen(str)+1)
 			{	perror("send() failed.");
 				break;
 			}
-			printf("\n%s\n",pstr);
+			printf("\n%s\n",str);
 			fflush(stdout);
 		}
 		close(Socket);
