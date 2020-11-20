@@ -2,6 +2,10 @@ CC := gcc
 CFLAGS := -g -Wall -Wextra
 LOADLIBES := -pthread -lpigpio -lrt
 
+.PHONY: all
+all: main testkey testjoystick
+	
+
 main: main.o newMotorDriver.o
 	$(CC) $(CFLAGS) $(LOADLIBES) -o $@ main.o newMotorDriver.o
 
