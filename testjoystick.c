@@ -11,14 +11,11 @@
 #define JOY_DEV "/dev/input/js0"
 
 int main(void)
-{	int fd, Socket, fl = 1;
+{	int fd, Socket, fl = 1, x;
 	char str[256];
 	struct js_event js;
 	struct sockaddr_in serverSockAddr;
 	unsigned short serverPort = 12479;
-//	unsigned int sockAddrLen;
-
-//	sockAddrLen = sizeof(serverSockAddr);
 
 	memset(&serverSockAddr, 0, sizeof(serverSockAddr));
 
@@ -29,14 +26,12 @@ int main(void)
 	if((Socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	{	perror("socket() failed.");
 		close(Socket);
-		free(serverSockAddr);
 		exit(-1);
 	}
 
 
 	while(1)
-	{	
-		if(connect(Socket, (struct sockaddr*) &serverSockAddr, sizeof(serverSockAddr)) < 0)
+	{	if(connect(Socket, (struct sockaddr*) &serverSockAddr, sizeof(serverSockAddr)) < 0)
 		{	close(Socket);
 			continue;
 		}
@@ -47,10 +42,6 @@ int main(void)
 			{	printf( "Couldn't open joystick device %s\n", JOY_DEV);
 				return -1;
 			}
-
-			ioctl(fd, JSIOCGAXES, &num_of_axis);
-			ioctl(fd, JSIOCGBUTTONS, &num_of_buttons);
-			ioctl(fd, JSIOCGNAME(80), &temstr);
 
 			while(1)
 			{	if(read(fd, &js, sizeof(struct js_event)) < 0)
