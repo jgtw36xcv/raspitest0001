@@ -157,27 +157,27 @@ int main(void)
 
 			if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
 			{	if(str[2]=='-')
-				{	sscanf(str+2,"%d",axes0);
+				{	sscanf(str+2,"%d",&axes0);
 					CtrlFlag |= 0x1<<2;
 				}else
 					CtrlFlag |= 0x1<<0;
 			}
 
 			if(CtrlFlag&0x1<<0)
-			{	sscanf(str,"%d",axes0);
+			{	sscanf(str,"%d",&axes0);
 				CtrlFlag &= ~(0x1<<0);
 			}
 
 			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
 			{	if(str[2]=='-')
-				{	sscanf(str+2,"%d",axes0);
+				{	sscanf(str+2,"%d",&axes0);
 					CtrlFlag |= 0x1<<2;
 				}else
 					CtrlFlag |= 0x1<<1;
 			}
 
 			if(CtrlFlag&0x1<<1)
-			{	sscanf(str,"%d",axes1);
+			{	sscanf(str,"%d",&axes1);
 				CtrlFlag &= ~(0x1<<1);
 			}
 
