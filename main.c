@@ -227,8 +227,9 @@ int main(int argc, char* args[])
 				}
 			}
 
-			if(!(FLAG_L||FLAG_R||FLAG_U||FLAG_D))
+			if((!FLAG_L)&&(!FLAG_R)&&(!FLAG_U)&&(!FLAG_D))
 			{	nstate=0;
+				puts("st");
 			}
 
 			if(strcmp(str,"3:on")==0)
