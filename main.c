@@ -241,21 +241,32 @@ int main(int argc, char* args[])
 					nstate=0;
 			}
 
+			if(strcmp(str, "6:-32767")==0)
+				nstate=5;
+			else if(strcmp(str, "6:0")==0)
+				nstate=0;
+			else if(strcmp(str, "6:32767")==0)
+				nstate=4;
+
+			if(strcmp(str, "7:-32767")==0)
+				gpioWrite(19,1);
+			else if(strcmp(str, "6:0")==0)
+			{	gpioWrite(19,0);
+				gpioWrite(20,0);
+			}
+			else if(strcmp(str, "6:32767")==0)
+				gpioWrite(20,1);
+
 			if(strcmp(str,"3:on")==0)
 			{	static int ledstate = 0;
 				ledstate++;
-				gpioWrite(23,(ledstate>>0)&1);
-				gpioWrite(24,(ledstate>>1)&1);
-				gpioWrite(25,(ledstate>>2)&1);
-				gpioWrite(26,(ledstate>>3)&1);
+				gpioWrite(23,ledstate&1);
 			}
 
 			if(strcmp(str,"2:on")==0)
-			{	gpioWrite(18,1);
-			}
-
-			if(strcmp(str,"2:off")==0)
-			{	gpioWrite(18,0);
+			{	static int temp = 0;
+				temp++;
+				gpioWrite(18,temp&1);
 			}
 
 			if(strcmp(str,"1:on")==0)
@@ -268,30 +279,6 @@ int main(int argc, char* args[])
 
 			if(strcmp(str,"0:off")==0)
 			{	gpioWrite(17,0);
-			}
-
-			if(strcmp(str,"6:on")==0)
-			{	gpioWrite(19,1);
-			}
-
-			if(strcmp(str,"6:off")==0)
-			{	gpioWrite(19,0);
-			}
-
-			if(strcmp(str,"7:on")==0)
-			{	gpioWrite(20,1);
-			}
-
-			if(strcmp(str,"7:off")==0)
-			{	gpioWrite(20,0);
-			}
-
-			if(strcmp(str,"4:on")==0)//L1左旋回
-			{	nstate=7;
-			}
-
-			if(strcmp(str,"5:on")==0)//R1右旋回
-			{	nstate=6;
 			}
 
 			if(strcmp(str,"s")==0)
