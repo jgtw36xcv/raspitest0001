@@ -65,7 +65,7 @@ void shutdwnTimerFunc(void)
 
 int main(void)
 {	char str[256];
-	int nstate=0, inum, size, tret;
+	int nstate=0, inum, size, tret, CtrlFlag, axes0, axes1;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
 	unsigned short serverPort = 12479;
 	unsigned int sockAddrLen;
@@ -136,13 +136,13 @@ int main(void)
 		{	perror("accept() failed.");
 			programExit(EXIT_ERROR);
 		}
+		CtrlFlag = 0;
 		while(1)
 		{	SetMotorDriverStatus(blMD, MDstate[nstate][0]);
 			SetMotorDriverStatus(brMD, MDstate[nstate][1]);
 			SetMotorDriverStatus(flMD, MDstate[nstate][2]);
 			SetMotorDriverStatus(frMD, MDstate[nstate][3]);
 
-			//scanf("%s",str);
 			if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
 			{	perror("recv() failed.");
 				close(clientSock);
@@ -154,6 +154,98 @@ int main(void)
 			}
 
 			puts(str);
+
+			if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
+			{	if(str[2]=='-')
+				{	sscanf(str+2,"%d",axes0);
+					CtrlFlag |= 0x1<<2;
+				}else
+					CtrlFlag |= 0x1<<0;
+			}
+
+			if(CtrlFlag&0x1<<0)
+			{	sscanf(str,"%d",axes0);
+				CtrlFlag &= ~(0x1<<0);
+			}
+
+			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
+			{	if(str[2]=='-')
+				{	sscanf(str+2,"%d",axes0);
+					CtrlFlag |= 0x1<<2;
+				}else
+					CtrlFlag |= 0x1<<1;
+			}
+
+			if(CtrlFlag&0x1<<1)
+			{	sscanf(str,"%d",axes1);
+				CtrlFlag &= ~(0x1<<1);
+			}
+
+#define FLAG_L (axes0 < 80)
+#define FLAG_R (axes0 > 80)
+#define FLAG_U (axes1 > 80)
+#define FLAG_D (axes1 < 80)
+
+			if(CtrlFlag&0x1<<2)
+			{	if(FLAG_L)
+				{	nstate=7;
+				}
+				if(FLAG_R)
+				{	nstate=6;
+				}
+				if(FLAG_U)
+				{	nstate=1;
+				}
+				if(FLAG_D)
+				{	nstate=2;
+				}
+				if(FLAG_L&&FLAG_U)
+				{	if((axes0+axes1)<((axes1-axes0)/4))
+					{	nstate=9;
+					}
+					else if((axes0+axes1)<0)
+					{	nstate=7;
+					}
+					else
+					{	nstate=1;
+					}
+				}
+				if(FLAG_L&&FLAG_D)
+				{	if((axes0-axes1)>((axes1+axes0)/4))
+					{	nstate=11;
+					}
+					else if((axes0-axes1)<0)
+					{	nstate=7;
+					}
+					else
+					{	nstate=2;
+					}
+				}
+				if(FLAG_R&&FLAG_U)
+				{	if((axes0-axes1)<((axes1+axes0)/4))
+					{	nstate=8;
+					}
+					else if((axes0-axes1)<0)
+					{	nstate=6;
+					}
+					else
+					{	nstate=1;
+					}
+				}
+				if(FLAG_R&&FLAG_D)
+				{	if((axes0+axes1)<((axes0-axes1)/4))
+					{	nstate=10;
+					}
+					else if((axes0+axes1)<0)
+					{	nstate=6;
+					}
+					else
+					{	nstate=2;
+					}
+				}
+				
+				CtrlFlag &= ~(0x1<<2);
+			}
 
 			//十字キー
 			if(strcmp(str,"6:")==0)		//右進
