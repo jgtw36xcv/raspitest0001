@@ -165,28 +165,28 @@ int main(int argc, char* args[])
 
 			printf("axes1 = %d\n",axes1);
 
-#define FLAG_L (axes0 < 260)
+#define FLAG_L (axes0 < -260)
 #define FLAG_R (axes0 > 260)
-#define FLAG_U (axes1 > 260)
-#define FLAG_D (axes1 < 260)
+#define FLAG_U (axes1 < -260)
+#define FLAG_D (axes1 > 260)
 
-			if(FLAG_L&&!(FLAG_R||FLAG_U||FLAG_D))
+			if(FLAG_L&&!(FLAG_U||FLAG_D))
 			{	nstate=7;
 			}
-			if(FLAG_R&&!(FLAG_L||FLAG_U||FLAG_D))
+			if(FLAG_R&&!(FLAG_U||FLAG_D))
 			{	nstate=6;
 			}
-			if(FLAG_U&&!(FLAG_L||FLAG_R||FLAG_D))
+			if(FLAG_U&&!(FLAG_L||FLAG_R))
 			{	nstate=1;
 			}
-			if(FLAG_D&&!(FLAG_L||FLAG_R||FLAG_U))
+			if(FLAG_D&&!(FLAG_L||FLAG_R))
 			{	nstate=2;
 			}
 			if(FLAG_L&&FLAG_U)
-			{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
+			{	if(abs(axes0-axes1)<(abs(axes0+axes1)/4))
 				{	nstate=9;
 				}
-				else if((axes0+axes1)<0)
+				else if((axes0-axes1)<0)
 				{	nstate=7;
 				}
 				else
@@ -194,10 +194,10 @@ int main(int argc, char* args[])
 				}
 			}
 			if(FLAG_L&&FLAG_D)
-			{	if(abs(axes0-axes1)<(abs(axes0+axes1)/4))
+			{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
 				{	nstate=11;
 				}
-				else if((axes0-axes1)<0)
+				else if((axes0+axes1)<0)
 				{	nstate=7;
 				}
 				else
@@ -205,31 +205,30 @@ int main(int argc, char* args[])
 				}
 			}
 			if(FLAG_R&&FLAG_U)
-			{	if(abs(axes0-axes1)<(abs(axes1+axes0)/4))
+			{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
 				{	nstate=8;
 				}
-				else if((axes0-axes1)<0)
-				{	nstate=6;
+				else if((axes0+axes1)<0)
+				{	nstate=1;
 				}
 				else
-				{	nstate=1;
+				{	nstate=6;
 				}
 			}
 			if(FLAG_R&&FLAG_D)
-			{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
+			{	if(abs(axes0-axes1)<(abs(axes0+axes1)/4))
 				{	nstate=10;
 				}
-				else if((axes0+axes1)<0)
-				{	nstate=6;
+				else if((axes0-axes1)<0)
+				{	nstate=2;
 				}
 				else
-				{	nstate=2;
+				{	nstate=6;
 				}
 			}
 
-			if(axes0==0&&axes1==0)
+			if(!(FLAG_L||FLAG_R||FLAG_U||FLAG_D))
 			{	nstate=0;
-				puts("st");
 			}
 
 			if(strcmp(str,"3:on")==0)
