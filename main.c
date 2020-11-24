@@ -158,29 +158,39 @@ int main(void)
 			if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
 			{	if(str[2]=='-')
 				{	sscanf(str+2,"%d",&axes0);
-					CtrlFlag |= 0x1<<2;
-				}else
-					CtrlFlag |= 0x1<<0;
-			}
-
-			if(CtrlFlag&0x1<<0)
-			{	sscanf(str,"%d",&axes0);
-				CtrlFlag &= ~(0x1<<0);
-				CtrlFlag |= 0x1<<2;
+				}
+				else
+				{
+					if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
+					{	perror("recv() failed.");
+						close(clientSock);
+						break;
+					}else if(size==0)
+					{	fprintf(stderr, "connection closed by remote host.\n");
+						close(clientSock);
+						break;
+					}
+					sscanf(str,"%d",&axes0);
+				}
 			}
 
 			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
 			{	if(str[2]=='-')
-				{	sscanf(str+2,"%d",&axes0);
-					CtrlFlag |= 0x1<<2;
+				{	sscanf(str+2,"%d",&axes1);
 				}else
-					CtrlFlag |= 0x1<<1;
-			}
-
-			if(CtrlFlag&0x1<<1)
-			{	sscanf(str,"%d",&axes1);
-				CtrlFlag &= ~(0x1<<1);
-				CtrlFlag |= 0x1<<2;
+				else
+				{
+					if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
+					{	perror("recv() failed.");
+						close(clientSock);
+						break;
+					}else if(size==0)
+					{	fprintf(stderr, "connection closed by remote host.\n");
+						close(clientSock);
+						break;
+					}
+					sscanf(str,"%d",&axes1);
+				}
 			}
 
 #define FLAG_L (axes0 < 80)
@@ -188,7 +198,7 @@ int main(void)
 #define FLAG_U (axes1 > 80)
 #define FLAG_D (axes1 < 80)
 
-			if(FLAG_L)
+			if(FLAG_L&&!())
 			{	nstate=7;
 			}
 			if(FLAG_R)
