@@ -63,7 +63,7 @@ void shutdwnTimerFunc(void)
 		programExit(EXIT_SHUTDOWN);
 }
 
-int main(int argc, char* args[])
+int main()
 {	char str[256];
 	int nstate=0, inum, size, tret, axes0, axes1, axes3;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
