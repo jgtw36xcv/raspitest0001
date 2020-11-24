@@ -10,7 +10,7 @@
 
 #define JOY_DEV "/dev/input/js0"
 
-int main(void)
+int main(int argc, char* args[])
 {	int fd, Socket, fl = 1, x;
 	char str[256];
 	struct js_event js;
@@ -48,7 +48,10 @@ int main(void)
 				}
 				switch(js.type&~JS_EVENT_INIT)
 				{	case JS_EVENT_AXIS:
-						sprintf(str, "%d:%6d ", js.number, js.value);
+						if(argc == 2 && strcmp(args[1], "joys"))
+							sprintf(str, "%d:%d ", js.number, js.value);
+						else
+							sprintf(str, "%d:%6d ", js.number, js.value);
 						break;
 					case JS_EVENT_BUTTON:
 						sprintf(str, "%d:%s ", js.number, js.value == 1 ? "on " : "off");

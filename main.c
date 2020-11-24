@@ -63,7 +63,7 @@ void shutdwnTimerFunc(void)
 		programExit(EXIT_SHUTDOWN);
 }
 
-int main(void)
+int main(int argc, char* args[])
 {	char str[256];
 	int nstate=0, inum, size, tret, axes0, axes1;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
@@ -155,41 +155,50 @@ int main(void)
 
 			puts(str);
 
-			if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
-			{	if(str[2]=='-')
-				{	sscanf(str+2,"%d",&axes0);
-				}
-				else
-				{
-					if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
-					{	perror("recv() failed.");
-						close(clientSock);
-						break;
-					}else if(size==0)
-					{	fprintf(stderr, "connection closed by remote host.\n");
-						close(clientSock);
-						break;
-					}
-					sscanf(str,"%d",&axes0);
-				}
-			}
+			if(argc == 2 && strcmp(args[1], "joys"))
+			{	if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
+					sscanf(str+2,"%d",&axes0);
 
-			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
-			{	if(str[2]=='-')
-				{	sscanf(str+2,"%d",&axes1);
-				}
-				else
-				{
-					if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
-					{	perror("recv() failed.");
-						close(clientSock);
-						break;
-					}else if(size==0)
-					{	fprintf(stderr, "connection closed by remote host.\n");
-						close(clientSock);
-						break;
+				if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
+					sscanf(str+2,"%d",&axes1);
+			}
+			else
+			{	if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
+				{	if(str[2]=='-')
+					{	sscanf(str+2,"%d",&axes0);
 					}
-					sscanf(str,"%d",&axes1);
+					else
+					{
+						if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
+						{	perror("recv() failed.");
+							close(clientSock);
+							break;
+						}else if(size==0)
+						{	fprintf(stderr, "connection closed by remote host.\n");
+							close(clientSock);
+							break;
+						}
+						sscanf(str,"%d",&axes0);
+					}
+				}
+
+				if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
+				{	if(str[2]=='-')
+					{	sscanf(str+2,"%d",&axes1);
+					}
+					else
+					{
+						if((size = recv(clientSock, str, sizeof(str), 0)) == -1)
+						{	perror("recv() failed.");
+							close(clientSock);
+							break;
+						}else if(size==0)
+						{	fprintf(stderr, "connection closed by remote host.\n");
+							close(clientSock);
+							break;
+						}
+						sscanf(str,"%d",&axes1);
+					}
 				}
 			}
 
