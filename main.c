@@ -200,7 +200,7 @@ int main(void)
 				{	nstate=2;
 				}
 				if(FLAG_L&&FLAG_U)
-				{	if((axes0+axes1)<((axes1-axes0)/4))
+				{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
 					{	nstate=9;
 					}
 					else if((axes0+axes1)<0)
@@ -211,7 +211,7 @@ int main(void)
 					}
 				}
 				if(FLAG_L&&FLAG_D)
-				{	if((axes0-axes1)>((axes1+axes0)/4))
+				{	if(abs(axes0-axes1)<(abs(axes0+axes1)/4))
 					{	nstate=11;
 					}
 					else if((axes0-axes1)<0)
@@ -222,7 +222,7 @@ int main(void)
 					}
 				}
 				if(FLAG_R&&FLAG_U)
-				{	if((axes0-axes1)<((axes1+axes0)/4))
+				{	if(abs(axes0-axes1)<(abs(axes1+axes0)/4))
 					{	nstate=8;
 					}
 					else if((axes0-axes1)<0)
@@ -233,7 +233,7 @@ int main(void)
 					}
 				}
 				if(FLAG_R&&FLAG_D)
-				{	if((axes0+axes1)<((axes0-axes1)/4))
+				{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
 					{	nstate=10;
 					}
 					else if((axes0+axes1)<0)
@@ -245,65 +245,6 @@ int main(void)
 				}
 				
 				CtrlFlag &= ~(0x1<<2);
-			}
-
-			//十字キー
-			if(strcmp(str,"6:")==0)		//右進
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=6;
-				}
-			}
-
-			if(strcmp(str,"6:-32767")==0)	//左進
-			{	nstate=7;
-			}
-
-			if(strcmp(str,"7:")==0)		//逆転
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=2;
-				}
-			}
-
-			if(strcmp(str,"7:-32767")==0)	//正転
-			{	nstate=1;
-			}
-
-			//右スティック横軸
-			if(strcmp(str,"3:")==0)		//右回転
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=4;
-				}
-			}
-
-			if(strcmp(str,"3:-32767")==0)	//左回転
-			{	nstate=5;
-			}
-
-			//左スティック縦軸
-			if(strcmp(str,"1:")==0)		//逆転
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=2;
-				}
-			}
-
-			if(strcmp(str,"1:-32767")==0)	//正転
-			{	nstate=1;
-			}
-
-			//左スティック横軸
-			if(strcmp(str,"0:")==0)		//右進
-			{	scanf("%s",str);
-				if(strcmp(str,"32767")==0)
-				{	nstate=6;
-				}
-			}
-
-			if(strcmp(str,"0:-32767")==0)	//左進
-			{	nstate=7;
 			}
 
 			if(strcmp(str,"3:on")==0)

@@ -23,15 +23,14 @@ int main(void)
 	inet_aton("127.0.0.1", &serverSockAddr.sin_addr);
 	serverSockAddr.sin_port = htons(serverPort);
 
-	if((Socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-	{	perror("socket() failed.");
-		close(Socket);
-		exit(-1);
-	}
-
-
 	while(1)
-	{	if(connect(Socket, (struct sockaddr*) &serverSockAddr, sizeof(serverSockAddr)) < 0)
+	{	if((Socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+		{	perror("socket() failed.");
+			close(Socket);
+			exit(-1);
+		}
+
+		if(connect(Socket, (struct sockaddr*) &serverSockAddr, sizeof(serverSockAddr)) < 0)
 		{	close(Socket);
 			continue;
 		}
