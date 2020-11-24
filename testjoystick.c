@@ -48,7 +48,7 @@ int main(int argc, char* args[])
 				}
 				switch(js.type&~JS_EVENT_INIT)
 				{	case JS_EVENT_AXIS:
-						if(argc == 2 && strcmp(args[1], "joys"))
+						if(argc == 2 && (strcmp(args[1], "joys")==0))
 							sprintf(str, "%d:%d ", js.number, js.value);
 						else
 							sprintf(str, "%d:%6d ", js.number, js.value);

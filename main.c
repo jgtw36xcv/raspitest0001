@@ -155,7 +155,7 @@ int main(int argc, char* args[])
 
 			puts(str);
 
-			if(argc == 2 && strcmp(args[1], "joys"))
+			if(argc == 2 && (strcmp(args[1], "joys")==0))
 			{	if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
 					sscanf(str+2,"%d",&axes0);
 
