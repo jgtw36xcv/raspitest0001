@@ -227,7 +227,7 @@ int main(int argc, char* args[])
 				}
 			}
 
-			if((!FLAG_L)&&(!FLAG_R)&&(!FLAG_U)&&(!FLAG_D))
+			if(axes0==0&&axes1==0)
 			{	nstate=0;
 				puts("st");
 			}
