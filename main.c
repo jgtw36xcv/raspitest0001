@@ -198,16 +198,16 @@ int main(void)
 #define FLAG_U (axes1 > 80)
 #define FLAG_D (axes1 < 80)
 
-			if(FLAG_L&&!(||FLAG_R||FLAG_U||FLAG_D))
+			if(FLAG_L&&!(FLAG_R||FLAG_U||FLAG_D))
 			{	nstate=7;
 			}
-			if(FLAG_R&&!(||FLAG_L||FLAG_U||FLAG_D))
+			if(FLAG_R&&!(FLAG_L||FLAG_U||FLAG_D))
 			{	nstate=6;
 			}
-			if(FLAG_U&&!(||FLAG_L||FLAG_R||FLAG_D))
+			if(FLAG_U&&!(FLAG_L||FLAG_R||FLAG_D))
 			{	nstate=1;
 			}
-			if(FLAG_D&&!(||FLAG_L||FLAG_R||FLAG_U))
+			if(FLAG_D&&!(FLAG_L||FLAG_R||FLAG_U))
 			{	nstate=2;
 			}
 			if(FLAG_L&&FLAG_U)
