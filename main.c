@@ -65,7 +65,7 @@ void shutdwnTimerFunc(void)
 
 int main(void)
 {	char str[256];
-	int nstate=0, inum, size, tret, CtrlFlag, axes0, axes1;
+	int nstate=0, inum, size, tret, axes0, axes1;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
 	unsigned short serverPort = 12479;
 	unsigned int sockAddrLen;
@@ -193,10 +193,10 @@ int main(void)
 				}
 			}
 
-#define FLAG_L (axes0 < 80)
-#define FLAG_R (axes0 > 80)
-#define FLAG_U (axes1 > 80)
-#define FLAG_D (axes1 < 80)
+#define FLAG_L (axes0 < 120)
+#define FLAG_R (axes0 > 120)
+#define FLAG_U (axes1 > 120)
+#define FLAG_D (axes1 < 120)
 
 			if(FLAG_L&&!(FLAG_R||FLAG_U||FLAG_D))
 			{	nstate=7;
