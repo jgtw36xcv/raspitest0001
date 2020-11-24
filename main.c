@@ -65,7 +65,7 @@ void shutdwnTimerFunc(void)
 
 int main(int argc, char* args[])
 {	char str[256];
-	int nstate=0, inum, size, tret, axes0, axes1;
+	int nstate=0, inum, size, tret, axes0, axes1, axes3;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
 	unsigned short serverPort = 12479;
 	unsigned int sockAddrLen;
@@ -165,6 +165,11 @@ int main(int argc, char* args[])
 
 			printf("axes1 = %d\n",axes1);
 
+			if(str[0]=='3'&&str[1]==':'&& str[2]!='o')
+				sscanf(str+2,"%d",&axes3);
+
+			printf("axes3 = %d\n",axes3);
+
 #define FLAG_L (axes0 < -260)
 #define FLAG_R (axes0 > 260)
 #define FLAG_U (axes1 < -260)
@@ -228,7 +233,12 @@ int main(int argc, char* args[])
 			}
 
 			if(!(FLAG_L||FLAG_R||FLAG_U||FLAG_D))
-			{	nstate=0;
+			{	if(axes3 < -260)
+					nstate=5;
+				else if(axes3 > 260)
+					nstate=4;
+				else
+					nstate=0;
 			}
 
 			if(strcmp(str,"3:on")==0)
@@ -238,10 +248,6 @@ int main(int argc, char* args[])
 				gpioWrite(24,(ledstate>>1)&1);
 				gpioWrite(25,(ledstate>>2)&1);
 				gpioWrite(26,(ledstate>>3)&1);
-			}
-
-			if(strcmp(str,"3:off")==0)
-			{
 			}
 
 			if(strcmp(str,"2:on")==0)
@@ -254,10 +260,6 @@ int main(int argc, char* args[])
 
 			if(strcmp(str,"1:on")==0)
 			{	nstate=0;
-			}
-
-			if(strcmp(str,"1:off")==0)
-			{
 			}
 
 			if(strcmp(str,"0:on")==0)
