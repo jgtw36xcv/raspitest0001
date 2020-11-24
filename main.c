@@ -158,12 +158,12 @@ int main(int argc, char* args[])
 			if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
 				sscanf(str+2,"%d",&axes0);
 
-			printf("ases0 = %d",ases0);
+			printf("axes0 = %d",axes0);
 
 			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
 				sscanf(str+2,"%d",&axes1);
 
-			printf("ases1 = %d",ases1);
+			printf("axes1 = %d",axes1);
 
 #define FLAG_L (axes0 < 120)
 #define FLAG_R (axes0 > 120)
