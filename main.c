@@ -166,6 +166,7 @@ int main(void)
 			if(CtrlFlag&0x1<<0)
 			{	sscanf(str,"%d",&axes0);
 				CtrlFlag &= ~(0x1<<0);
+				CtrlFlag |= 0x1<<2;
 			}
 
 			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
@@ -179,6 +180,7 @@ int main(void)
 			if(CtrlFlag&0x1<<1)
 			{	sscanf(str,"%d",&axes1);
 				CtrlFlag &= ~(0x1<<1);
+				CtrlFlag |= 0x1<<2;
 			}
 
 #define FLAG_L (axes0 < 80)
