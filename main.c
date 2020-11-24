@@ -136,7 +136,7 @@ int main(void)
 		{	perror("accept() failed.");
 			programExit(EXIT_ERROR);
 		}
-		CtrlFlag = 0;
+
 		while(1)
 		{	SetMotorDriverStatus(blMD, MDstate[nstate][0]);
 			SetMotorDriverStatus(brMD, MDstate[nstate][1]);
