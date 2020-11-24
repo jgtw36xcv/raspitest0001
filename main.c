@@ -188,65 +188,65 @@ int main(void)
 #define FLAG_U (axes1 > 80)
 #define FLAG_D (axes1 < 80)
 
-			if(CtrlFlag&0x1<<2)
-			{	if(FLAG_L)
+			if(FLAG_L)
+			{	nstate=7;
+			}
+			if(FLAG_R)
+			{	nstate=6;
+			}
+			if(FLAG_U)
+			{	nstate=1;
+			}
+			if(FLAG_D)
+			{	nstate=2;
+			}
+			if(FLAG_L&&FLAG_U)
+			{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
+				{	nstate=9;
+				}
+				else if((axes0+axes1)<0)
 				{	nstate=7;
 				}
-				if(FLAG_R)
-				{	nstate=6;
-				}
-				if(FLAG_U)
+				else
 				{	nstate=1;
 				}
-				if(FLAG_D)
+			}
+			if(FLAG_L&&FLAG_D)
+			{	if(abs(axes0-axes1)<(abs(axes0+axes1)/4))
+				{	nstate=11;
+				}
+				else if((axes0-axes1)<0)
+				{	nstate=7;
+				}
+				else
 				{	nstate=2;
 				}
-				if(FLAG_L&&FLAG_U)
-				{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
-					{	nstate=9;
-					}
-					else if((axes0+axes1)<0)
-					{	nstate=7;
-					}
-					else
-					{	nstate=1;
-					}
+			}
+			if(FLAG_R&&FLAG_U)
+			{	if(abs(axes0-axes1)<(abs(axes1+axes0)/4))
+				{	nstate=8;
 				}
-				if(FLAG_L&&FLAG_D)
-				{	if(abs(axes0-axes1)<(abs(axes0+axes1)/4))
-					{	nstate=11;
-					}
-					else if((axes0-axes1)<0)
-					{	nstate=7;
-					}
-					else
-					{	nstate=2;
-					}
+				else if((axes0-axes1)<0)
+				{	nstate=6;
 				}
-				if(FLAG_R&&FLAG_U)
-				{	if(abs(axes0-axes1)<(abs(axes1+axes0)/4))
-					{	nstate=8;
-					}
-					else if((axes0-axes1)<0)
-					{	nstate=6;
-					}
-					else
-					{	nstate=1;
-					}
+				else
+				{	nstate=1;
 				}
-				if(FLAG_R&&FLAG_D)
-				{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
-					{	nstate=10;
-					}
-					else if((axes0+axes1)<0)
-					{	nstate=6;
-					}
-					else
-					{	nstate=2;
-					}
+			}
+			if(FLAG_R&&FLAG_D)
+			{	if(abs(axes0+axes1)<(abs(axes0-axes1)/4))
+				{	nstate=10;
 				}
-				
-				CtrlFlag &= ~(0x1<<2);
+				else if((axes0+axes1)<0)
+				{	nstate=6;
+				}
+				else
+				{	nstate=2;
+				}
+			}
+
+			if(!(FLAG_L||FLAG_R||FLAG_U||FLAG_D))
+			{	nstate=0;
 			}
 
 			if(strcmp(str,"3:on")==0)
