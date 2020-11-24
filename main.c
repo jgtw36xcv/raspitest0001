@@ -250,11 +250,11 @@ int main()
 
 			if(strcmp(str, "7:-32767")==0)
 				gpioWrite(19,1);
-			else if(strcmp(str, "6:0")==0)
+			else if(strcmp(str, "7:0")==0)
 			{	gpioWrite(19,0);
 				gpioWrite(20,0);
 			}
-			else if(strcmp(str, "6:32767")==0)
+			else if(strcmp(str, "7:32767")==0)
 				gpioWrite(20,1);
 
 			if(strcmp(str,"3:on")==0)
