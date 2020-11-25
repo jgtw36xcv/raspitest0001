@@ -170,10 +170,10 @@ int main()
 
 //			printf("axes3 = %d\n",axes3);
 
-#define FLAG_L (axes0 < -1000)
-#define FLAG_R (axes0 > 1000)
-#define FLAG_U (axes1 < -1000)
-#define FLAG_D (axes1 > 1000)
+#define FLAG_L (axes0 < -5000)
+#define FLAG_R (axes0 > 5000)
+#define FLAG_U (axes1 < -5000)
+#define FLAG_D (axes1 > 5000)
 
 			if(FLAG_L&&!(FLAG_U||FLAG_D))
 			{	nstate=7;
@@ -233,9 +233,9 @@ int main()
 			}
 
 			if(!(FLAG_L||FLAG_R||FLAG_U||FLAG_D))
-			{	if(axes3 < -1000)
+			{	if(axes3 < -5000)
 					nstate=5;
-				else if(axes3 > 1000)
+				else if(axes3 > 5000)
 					nstate=4;
 				else
 					nstate=0;
@@ -270,7 +270,9 @@ int main()
 			}
 
 			if(strcmp(str,"1:on")==0)
-			{	nstate=0;
+			{	axes0 = 0;
+				axes1 = 0;
+				nstate=0;
 			}
 
 			if(strcmp(str,"0:on")==0)
