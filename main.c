@@ -170,10 +170,10 @@ int main()
 
 //			printf("axes3 = %d\n",axes3);
 
-#define FLAG_L (axes0 < -5000)
-#define FLAG_R (axes0 > 5000)
-#define FLAG_U (axes1 < -5000)
-#define FLAG_D (axes1 > 5000)
+#define FLAG_L (axes0 < -10000)
+#define FLAG_R (axes0 > 10000)
+#define FLAG_U (axes1 < -10000)
+#define FLAG_D (axes1 > 10000)
 
 			if(FLAG_L&&!(FLAG_U||FLAG_D))
 			{	nstate=7;
@@ -272,6 +272,7 @@ int main()
 			if(strcmp(str,"1:on")==0)
 			{	axes0 = 0;
 				axes1 = 0;
+				axes3 = 0;
 				nstate=0;
 			}
 
