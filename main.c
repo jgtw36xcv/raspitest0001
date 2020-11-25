@@ -158,17 +158,17 @@ int main()
 			if(str[0]=='0'&&str[1]==':'&& str[2]!='o')
 				sscanf(str+2,"%d",&axes0);
 
-			printf("axes0 = %d\n",axes0);
+//			printf("axes0 = %d\n",axes0);
 
 			if(str[0]=='1'&&str[1]==':'&& str[2]!='o')
 				sscanf(str+2,"%d",&axes1);
 
-			printf("axes1 = %d\n",axes1);
+//			printf("axes1 = %d\n",axes1);
 
 			if(str[0]=='3'&&str[1]==':'&& str[2]!='o')
 				sscanf(str+2,"%d",&axes3);
 
-			printf("axes3 = %d\n",axes3);
+//			printf("axes3 = %d\n",axes3);
 
 #define FLAG_L (axes0 < -260)
 #define FLAG_R (axes0 > 260)

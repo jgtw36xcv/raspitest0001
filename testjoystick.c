@@ -51,7 +51,7 @@ int main()
 							sprintf(str, "%d:%d\n", js.number, js.value);
 						break;
 					case JS_EVENT_BUTTON:
-						sprintf(str, "%d:%s\n", js.number, js.value == 1 ? "on " : "off");
+						sprintf(str, "%d:%s\n", js.number, js.value == 1 ? "on" : "off");
 						break;
 					default:
 						continue;
