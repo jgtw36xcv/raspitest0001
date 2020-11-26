@@ -233,9 +233,9 @@ int main()
 			}
 
 			if(!(FLAG_L||FLAG_R||FLAG_U||FLAG_D))
-			{	if(axes3 < -5000)
+			{	if(axes3 < -10000)
 					nstate=5;
-				else if(axes3 > 5000)
+				else if(axes3 > 10000)
 					nstate=4;
 				else
 					nstate=0;
