@@ -30,6 +30,7 @@ int MDstate[12][4]=
 };
 
 volatile int serverSock, clientSock;
+volatile char locate[80];
 
 void signal_handler(int sig)
 {	programExit(EXIT_SUCCESS);
@@ -37,6 +38,8 @@ void signal_handler(int sig)
 
 void programExit(int m)
 {	int ret = 0;
+	char shutdowncommand[100];
+	sprintf(shutdowncommand,"bash %ssys_shutdown.sh",locate);
 	close(serverSock);
 	close(clientSock);
 
@@ -44,7 +47,7 @@ void programExit(int m)
 		ret = -1;
 
 	if((m&EXIT_SHUTDOWN) != 0)
-		system("bash ./sys_shutdown.sh");
+		system(shutdowncommand);
 
 	gpioTerminate();
 	exit(ret);
@@ -62,12 +65,15 @@ void shutdwnTimerFunc(void)
 		programExit(EXIT_SHUTDOWN);
 }
 
-int main()
+int main(int argc, char* argv[])
 {	char str[256];
 	int nstate=0, inum, size, tret, axes0, axes1, axes3;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
 	unsigned short serverPort = 12479;
 	unsigned int sockAddrLen;
+
+	sprintf(locate,"%s",argv[0]);
+	locate[strlen(locate)-4] = '\0';
 
 	sockAddrLen = sizeof(clientSockAddr);
 
