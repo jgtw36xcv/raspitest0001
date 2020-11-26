@@ -59,6 +59,8 @@ void shutdwnTimerFunc(void)
 		if(i<0)
 			i=0;
 	}
+	if(i%10==1)
+		printf("shutdown %d sec.",3-i/10);
 	if(i > 30)
 		programExit(EXIT_SHUTDOWN);
 }
@@ -124,7 +126,7 @@ int main()
 
 	gpioSetMode(24, PI_INPUT);
 	gpioSetPullUpDown(24, PI_PUD_DOWN);
-	gpioSetTimerFunc(0, 100, shutdwnTimerFunc);
+	gpioSetTimerFunc(6, 100, shutdwnTimerFunc);
 
 	gpioSetPWMfrequency(4,5);
 	gpioSetPWMfrequency(5,5);
