@@ -60,7 +60,7 @@ void shutdwnTimerFunc(void)
 			i=0;
 	}
 	if(i%10==1)
-		printf("shutdown %d sec.",3-i/10);
+		printf("shutdown %d sec.\n",3-i/10);
 	if(i > 30)
 		programExit(EXIT_SHUTDOWN);
 }
