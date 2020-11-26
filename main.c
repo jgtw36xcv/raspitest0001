@@ -37,7 +37,6 @@ void signal_handler(int sig)
 
 void programExit(int m)
 {	int ret = 0;
-	gpioTerminate();
 	close(serverSock);
 	close(clientSock);
 
@@ -47,6 +46,7 @@ void programExit(int m)
 	if((m&EXIT_SHUTDOWN) != 0)
 		system("bash ./sys_shutdown.sh");
 
+	gpioTerminate();
 	exit(ret);
 }
 
@@ -55,10 +55,7 @@ void shutdwnTimerFunc(void)
 	if(gpioRead(24) == 1)
 		i++;
 	else
-	{	i--;
-		if(i<0)
-			i=0;
-	}
+		i=0;
 	if(i%10==1)
 		printf("shutdown %d sec.\n",3-i/10);
 	if(i > 30)
