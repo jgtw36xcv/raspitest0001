@@ -63,6 +63,7 @@ int main()
 					fl = 0;
 					break;
 				}
+				fflash(Socket);
 			}
 			close(fd);
 		}
