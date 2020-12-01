@@ -6,21 +6,32 @@
 
 #include "netTcpCon.h"
 
-#define _INITIALISED_ 1
-#define _SERVERMODE_ 2
-#define _NOCONECT_ 4
+#define _INITIALISED_ (1<<0)
+#define _SERVERMODE_ (1<<1)
+#define _CONECT_ (1<<2)
+
+int redcCon();
 
 volatile int Server, Client, Flag=0;
+unsigned int sockAddrLen;
 struct sockaddr_in serverSockAddr, clientSockAddr;
 
 void InitNetConClient(char *ipaddress, short port)
-{	Flag=1;
+{	if(Flag & _INITIALISED_)
+		return;
+	Flag |= _INITIALISED_;
 	
+	memset(&serverSockAddr, 0, sizeof(serverSockAddr));
+	
+	serverSockAddr.sin_family = AF_INET;
+	inet_aton(ipaddress, &serverSockAddr.sin_addr);
+	serverSockAddr.sin_port = htons(port);
 }
 
 void InitNetConServer(short port)
-{	Flag=3;
-	unsigned int sockAddrLen;
+{	if(Flag & _INITIALISED_)
+		return;
+	Flag = _INITIALISED_ | _SERVERMODE_;
 	sockAddrLen = sizeof(clientSockAddr);
 
 	Server = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -36,12 +47,12 @@ void InitNetConServer(short port)
 
 	if(bind(Server, (struct sockaddr *) &serverSockAddr, sizeof(serverSockAddr)) < 0)
 	{	perror("bind() failed.");
-		programExit(1);
+		exit(1);
 	}
 
 	if(listen(serverSock, 3) < 0)
 	{	perror("listen() failed.");
-		programExit(1);
+		exit(1);
 	}
 }
 
@@ -51,23 +62,37 @@ int nConSend(int type, char *data, int length)
 }
 
 int nConRecv(char *data, int length)
-{	if(!Flag&(1<<2))
-	{	if(Flag&(1<<1))
-		{	
-			
-		}
-		else
-		{	
-			
-		}
-	}
-	if(Flag&(1<<1))
+{	int size;
+	if(!Flag&_CONECT_)
 	{	
-		
-		
+	}
+	size = recv(Client, data, length, 0))
+	if(size == -1)
+	{	Flag &= !_CONECT_;
+	}
+	return size;
+}
+
+int redcCon()
+{	if(Flag&_SERVERMODE_)
+	{	Client = accept(Server, (struct sockaddr *) &clientSockAddr, sockAddrLen);
+		if(Client < 0)
+		{	perror("accept() failed.");
+			exit(1);
+		}
+		Flag |= _CONECT_;
 	}
 	else
-	{	
-		
+	{	Client = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+		if(Client < 0)
+		{	perror("socket() failed.");
+			close(Client);
+			return -1;
+		}
+		if(connect(Client, (struct sockaddr *) &serverSockAddr, sizeof(serverSockAddr)) < 0)
+		{	perror("connect() failed.");
+			close(Client);
+			return -1;
+		}
 	}
 }
