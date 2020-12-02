@@ -4,13 +4,15 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "netTcpCon.h"
+#include "netUdpCon.h"
 
 #define _INITIALISED_ (1<<0)
 #define _SERVERMODE_ (1<<1)
 #define _CONECT_ (1<<2)
 
-int redcCon();
+int redcCon(void);
+void socket_close(void);
+void initNUC(void);
 
 volatile int Server, Client, Flag=0;
 unsigned int sockAddrLen;
@@ -34,7 +36,7 @@ void InitNetConServer(short port)
 	Flag = _INITIALISED_ | _SERVERMODE_;
 	sockAddrLen = sizeof(clientSockAddr);
 
-	Server = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	Server = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if(Server < 0)
 	{	perror("socket() failed.");
 		exit(1);
@@ -54,6 +56,11 @@ void InitNetConServer(short port)
 	{	perror("listen() failed.");
 		exit(1);
 	}
+}
+
+void initNUC(viod)
+{	
+	
 }
 
 int nConSend(int type, char *data, int length)
@@ -90,7 +97,7 @@ int redcCon()
 		Flag |= _CONECT_;
 	}
 	else
-	{	Client = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	{	Client = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 		if(Client < 0)
 		{	perror("socket() failed.");
 			close(Client);
