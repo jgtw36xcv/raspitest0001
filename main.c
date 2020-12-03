@@ -67,13 +67,14 @@ void shutdwnTimerFunc(void)
 
 int main(int argc, char* argv[])
 {	char str[256];
-	int nstate=0, inum, size, tret, axes0, axes1, axes3;
+	int i, nstate=0, inum, size, tret, axes0, axes1, axes3;
 	struct sockaddr_in serverSockAddr, clientSockAddr;
 	unsigned short serverPort = 12479;
 	unsigned int sockAddrLen;
 
-	sprintf(locate,"%s",argv[0]);
-	locate[strlen(locate)-4] = '\0';
+	for(i = 0; argv[i] != '\0'; i++)
+		locate[i] = argv[0][i];
+	locate[strlen(argv[0])-4] = '\0';
 
 	sockAddrLen = sizeof(clientSockAddr);
 
