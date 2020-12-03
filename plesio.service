@@ -4,8 +4,8 @@ After=syslog.target
 
 [Service]
 Type=simple
-WorkingDirectory=/usr/pi/Documents/projects/raspitest0001
-ExecStart=sudo /usr/pi/Documents/projects/raspitest0001/main service
+WorkingDirectory=/home/pi/Documents/projects/raspitest0001
+ExecStart=sudo /home/pi/Documents/projects/raspitest0001/main service
 
 TimeoutStopSec=5
 StandardOutput=null
