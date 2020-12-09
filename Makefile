@@ -11,7 +11,7 @@ main: main.o newMotorDriver.o
 
 .PHONY: clean
 clean:
-	$(RM) main main.o newMotorDriver.o testjoystick testkey 
+	$(RM) main *.o testjoystick testkey
 
 .PHONY: install
 install: main
